@@ -10,11 +10,10 @@ class BambuClient:
     def __init__(self, hostname: str, access_code: str, serial: str):
         self.cameraClient = CameraClient(hostname, access_code)
         self.watchClient = WatchClient(hostname, access_code, serial)
-        self.executeClient = ExecuteClient(hostname, access_code, serial)
         self.fileClient = FileClient(hostname, access_code, serial)
 
     def __del__(self):
-        self.executeClient.disconnect()
+        self.watchClient.stop()
 
     ############# Camera Wrappers #############
     def start_camera_stream(self, img_callback):
@@ -39,13 +38,13 @@ class BambuClient:
 
     ############# ExecuteClient Wrappers #############
     def send_gcode(self, gcode):
-        self.executeClient.send_gcode(gcode)
+        self.watchClient.send_gcode(gcode)
 
     def dump_info(self):
-        self.executeClient.dump_info()
+        self.watchClient.dump_info()
 
     def start_print(self, file):
-        self.executeClient.start_print(file)
+        self.watchClient.start_print(file)
 
     ############# FileClient Wrappers #############
     def get_files(self, path="/", extension=".3mf"):
@@ -57,3 +56,5 @@ class BambuClient:
         return self.fileClient.download_file(
             remote_path, local_path=local_path, verbose=verbose
         )
+    
+

@@ -8,13 +8,21 @@ class Upload:
     status: Optional[str] = None
     progress: Optional[int] = None
     message: Optional[str] = None
-
-
+    file_size: Optional[int] = None
+    finish_size: Optional[int] = None
+    oss_url: Optional[str] = None
+    sequence_id: Optional[int] = None
+    speed: Optional[int] = None
+    task_id: Optional[int] = None
+    time_remaining: Optional[int] = None
+    trouble_id: Optional[int] = None
+    
 @dataclass
 class Online:
     ahb: Optional[bool] = None
     rfid: Optional[bool] = None
     version: Optional[int] = None
+    ext: Optional[int] = None
 
 
 @dataclass
@@ -39,7 +47,12 @@ class VTTray:
     remain: Optional[int] = None
     k: Optional[float] = None
     n: Optional[int] = None
-
+    cali_idx: Optional[int] = None
+    cols: Optional[int] = None
+    ctype: Optional[int] = None
+    drying_temp: Optional[int] = None
+    drying_time: Optional[int] = None
+    
 @dataclass
 class AMSEntry:
     humidity: Optional[str] = None
@@ -61,6 +74,7 @@ class AMS:
     version: Optional[int] = None
     insert_flag: Optional[bool] = None
     power_on_flag: Optional[bool] = None
+    ams_exist_bits_raw: Optional[int] = None
 
 @dataclass
 class IPCam:
@@ -68,7 +82,11 @@ class IPCam:
     ipcam_record: Optional[str] = None
     timelapse: Optional[str] = None
     mode_bits: Optional[int] = None
-
+    resolution: Optional[int] = None # // evnchn
+    tutk_server: Optional[int] = None # // evnchn
+    agora_service: Optional[str] = None
+    rtsp_url: Optional[str] = None
+    
 @dataclass
 class LightsReport:
     node: Optional[str] = None
@@ -87,8 +105,15 @@ class UpgradeState:
     module: Optional[str] = None
     new_version_state: Optional[int] = None
     new_ver_list: Optional[List[Any]] = None
-
-
+    cur_state_code: Optional[int] = None
+    ahb_new_version_number: Optional[int] = None
+    ams_new_version_number: Optional[int] = None
+    ext_new_version_number: Optional[int] = None
+    idx: Optional[int] = None
+    idx1: Optional[int] = None
+    ota_new_version_number: Optional[int] = None
+    sn: Optional[int] = None
+    
 @dataclass
 class PrinterStatus:
     upload: Optional[Upload] = None
@@ -114,6 +139,7 @@ class PrinterStatus:
     wifi_signal: Optional[str] = None
     gcode_state: Optional[str] = None
     gcode_file_prepare_percent: Optional[str] = None
+    gcode_start_time: Optional[int] = None
     queue_number: Optional[int] = None
     queue_total: Optional[int] = None
     queue_est: Optional[int] = None

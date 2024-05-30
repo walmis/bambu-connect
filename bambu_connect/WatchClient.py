@@ -24,6 +24,49 @@ class WatchClient:
         client.on_connect = self.on_connect
         client.on_message = self.on_message
         return client
+    
+    # this dumps all the printer stats, for minor print updates the printer will send them automatically.
+    def dump_info(self):
+        payload = f'{{"pushing": {{ "sequence_id": 1, "command": "pushall"}}, "user_id":"1234567890"}}'
+        self.send_command(payload)
+        
+    def send_command(self, payload):
+        self.client.publish(f"device/{self.serial}/request", payload)
+
+    def send_gcode(self, gcode):
+        payload = f'{{"print": {{"command": "gcode_line", "sequence_id": 2006, "param": "{gcode} \n"}}, "user_id":"1234567890"}}'
+        self.send_command(payload)
+
+    # this dumps all the printer stats, for minor print updates the printer will send them automatically.
+    def dump_info(self):
+        payload = f'{{"pushing": {{ "sequence_id": 1, "command": "pushall"}}, "user_id":"1234567890"}}'
+        self.send_command(payload)
+
+    # when using this, choose the send to printer option in bambu or cura slicer. Provide the file name (no path)
+    def start_print(self, file):
+        payload = json.dumps(
+            {
+                "print": {
+                    "sequence_id": 13,
+                    "command": "project_file",
+                    "param": "Metadata/plate_1.gcode",
+                    "subtask_name": f"{file}",
+                    "url": f"ftp://{file}",
+                    "bed_type": "auto",
+                    "timelapse": False,
+                    "bed_leveling": True,
+                    "flow_cali": False,
+                    "vibration_cali": True,
+                    "layer_inspect": False,
+                    "use_ams": False,
+                    "profile_id": "0",
+                    "project_id": "0",
+                    "subtask_id": "0",
+                    "task_id": "0",
+                }
+            }
+        )
+        self.send_command(payload)
 
     def on_connect(self, client: mqtt.Client, userdata: Any, flags: Any, rc: int):
         client.subscribe(f"device/{self.serial}/report")
@@ -37,8 +80,9 @@ class WatchClient:
     ):
         self.message_callback = message_callback
         self.on_connect_callback = on_connect_callback
-        self.client.connect(self.hostname, 8883, 60)
         self.client.loop_start()
+
+        self.client.connect_async(self.hostname, 8883, 60)
 
     def stop(self):
         self.client.loop_stop()

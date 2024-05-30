@@ -17,7 +17,7 @@ class ExecuteClient:
         client.username_pw_set("bblp", self.access_code)
         client.tls_set(tls_version=ssl.PROTOCOL_TLS, cert_reqs=ssl.CERT_NONE)
         client.tls_insecure_set(True)
-        client.connect(self.hostname, 8883, 60)
+        client.connect_async(self.hostname, 8883, 60)
         return client
 
     def disconnect(self):
